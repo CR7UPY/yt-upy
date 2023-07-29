@@ -11,7 +11,7 @@ import SuggestionVideoCard from "./SuggestionVideoCard";
 
 const VideoDetails = () => {
   const [video, setVideo] = useState();
-  const [relatedVideo, setRelatedVideos] = useState();
+  const [relatedVideos, setRelatedVideos] = useState();
   const { id } = useParams();
   const { setLoading } = useContext(Context);
 
@@ -24,7 +24,7 @@ const VideoDetails = () => {
   const fetchVideoDetails = () => {
     setLoading(true);
     fetchDataFromApi(`video/details/?id=${id}`).then((res) => {
-      console.log(res);
+      // console.log(res);
       setVideo(res);
       setLoading(false);
     });
@@ -33,7 +33,7 @@ const VideoDetails = () => {
   const fetchRelatedVideo = () => {
     setLoading(true);
     fetchDataFromApi(`video/related-contents/?id=${id}`).then((res) => {
-      console.log(res);
+      // console.log(res);
       setRelatedVideos(res);
       setLoading(false);
     });
@@ -49,6 +49,7 @@ const VideoDetails = () => {
               width="100%"
               height="100%"
               style={{ backgroundColor: "00000" }}
+              playing={true}
             />
           </div>
           <div className="text-white font-bold text-sm md:text-xl mt-4 line-clamp-2">
@@ -60,14 +61,14 @@ const VideoDetails = () => {
                 <div className="flex h-11 w-11 rounded-full overflow-hidden">
                   <img
                     className="h-full w-full object-cover"
-                    src={video?.author?.avatar[0]?.url}
+                    src={video?.author?.avatar[0]?.url} alt="video"
                   />
                 </div>
               </div>
               <div className="flex flex-col ml-3">
                 <div className="text-white text-md font-semibold flex items-center">
-                  {video.author.title}
-                  {video.author.badges[0]?.type === "VERIFIED_CHANNEL" && (
+                  {video?.author?.title}
+                  {video?.author?.badges[0]?.type === "VERIFIED_CHANNEL" && (
                     <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] ml-1" />
                   )}
                 </div>
@@ -93,6 +94,14 @@ const VideoDetails = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="flex flex-col py-6 px-4 overflow-y-auto lg:w-[350px] xl:w-[400px]">
+          {relatedVideos?.contents?.map((item,index) => {
+            if(item?.type != "video") return false;
+            return(
+              <SuggestionVideoCard key={index} video={item?.video}/>
+            );
+          })}
         </div>
       </div>
     </div>
