@@ -18,7 +18,7 @@ export const AppContext = (props) => {
   const fetchSelectedCategoryDate = (query) => {
     setLoading(true);
     fetchDataFromApi(`search/?q=${query}`).then(({contents}) =>{
-        // console.log(contents);
+       
          setSearchResults(contents)
         setLoading(false);
     });
